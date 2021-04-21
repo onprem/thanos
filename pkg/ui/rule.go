@@ -120,6 +120,7 @@ func ruleTmplFuncs(queryURL string) template.FuncMap {
 			}
 			return fmt.Sprintf("%.4g%ss", v, prefix)
 		},
+		"uiPrefix": func() string { return "/classic" },
 	}
 }
 
@@ -155,10 +156,6 @@ func (ru *Rule) rules(w http.ResponseWriter, r *http.Request) {
 }
 
 func (ru *Rule) Register(r *route.Router, ins extpromhttp.InstrumentationMiddleware) {
-	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		http.Redirect(w, r, path.Join(GetWebPrefix(ru.logger, ru.externalPrefix, ru.prefixHeader, r), "/alerts"), http.StatusFound)
-	})
-
 	r.Get("/classic/", func(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, path.Join(GetWebPrefix(ru.logger, ru.externalPrefix, ru.prefixHeader, r), "/classic/alerts"), http.StatusFound)
 	})

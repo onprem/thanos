@@ -58,16 +58,13 @@ func queryTmplFuncs() template.FuncMap {
 		"formatTimestamp": func(timestamp int64) string {
 			return time.Unix(timestamp/1000, 0).Format(time.RFC3339)
 		},
-		"title": strings.Title,
+		"title":    strings.Title,
+		"uiPrefix": func() string { return "/classic" },
 	}
 }
 
 // Register registers new GET routes for subpages and redirects from / to /graph.
 func (q *Query) Register(r *route.Router, ins extpromhttp.InstrumentationMiddleware) {
-	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		http.Redirect(w, r, path.Join(GetWebPrefix(q.logger, q.externalPrefix, q.prefixHeader, r), "/graph"), http.StatusFound)
-	})
-
 	r.Get("/classic/", func(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, path.Join(GetWebPrefix(q.logger, q.externalPrefix, q.prefixHeader, r), "/classic/graph"), http.StatusFound)
 	})
